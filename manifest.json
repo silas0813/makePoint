@@ -1,0 +1,21 @@
+{
+    "short_name": "計分程式",
+    "name": "屹立不倒 - 計分程式",
+    "icons": [
+      {
+        "src": "/128_128.jpg",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "src": "/512_512.jpg",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
+  }
+  

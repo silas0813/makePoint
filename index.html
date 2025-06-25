@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>屹立不倒 - 計分程式</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" type="image/x-icon" href="66163.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        'red-team': '#EF4444',
+                        'blue-team': '#3B82F6'
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+    <div class="container mx-auto p-4 max-w-7xl">
+        <!-- Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl sm:text-3xl font-bold text-primary text-center">屹立不倒計分程式</h1>
+        </div>
+
+        <!-- Layout Container -->
+        <div id="layoutContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Red Team Section -->
+            <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border-2 border-red-200 dark:border-red-800">
+                <h2 class="text-xl font-bold text-red-600 dark:text-red-400 mb-4 flex items-center">
+                    🔴 紅隊
+                    <span id="redTotal" class="ml-auto text-2xl font-bold">0</span>
+                </h2>
+                
+                <!-- Red Team Input Section -->
+                <div class="space-y-4">
+                    <!-- Main Scoring Zone -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3">主得分區</h3>
+                        <div id="redMainZone" class="space-y-2">
+                            <!-- Dynamic stacks will be added here -->
+                        </div>
+                        <button onclick="addMainStack('red')" class="mt-3 px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600">
+                            + 新增堆疊
+                        </button>
+                        <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            主得分區分數: <span id="redMainScore" class="font-bold">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Endurance Zone -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3">屹立不倒區</h3>
+                        <div id="redEnduranceZone" class="space-y-2">
+                            <!-- Dynamic stacks will be added here -->
+                        </div>
+                        <button onclick="addEnduranceStack('red')" class="mt-3 px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600">
+                            + 新增堆疊
+                        </button>
+                        <div class="mt-2 space-y-1">
+                            <div class="flex items-center gap-2">
+                                <label class="text-sm">問答答案:</label>
+                                <input type="number" id="redAnswer" class="w-20 px-2 py-1 border rounded text-base" onchange="calculateScores()" min="0">
+                            </div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                屹立不倒分數: <span id="redEnduranceScore" class="font-bold">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Auto Bonus -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            自動時段加分: <span id="redAutoScore" class="font-bold">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blue Team Section -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border-2 border-blue-200 dark:border-blue-800">
+                <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-4 flex items-center">
+                    🔵 藍隊
+                    <span id="blueTotal" class="ml-auto text-2xl font-bold">0</span>
+                </h2>
+                
+                <!-- Blue Team Input Section -->
+                <div class="space-y-4">
+                    <!-- Main Scoring Zone -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3">主得分區</h3>
+                        <div id="blueMainZone" class="space-y-2">
+                            <!-- Dynamic stacks will be added here -->
+                        </div>
+                        <button onclick="addMainStack('blue')" class="mt-3 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                            + 新增堆疊
+                        </button>
+                        <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            主得分區分數: <span id="blueMainScore" class="font-bold">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Endurance Zone -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3">屹立不倒區</h3>
+                        <div id="blueEnduranceZone" class="space-y-2">
+                            <!-- Dynamic stacks will be added here -->
+                        </div>
+                        <button onclick="addEnduranceStack('blue')" class="mt-3 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                            + 新增堆疊
+                        </button>
+                        <div class="mt-2 space-y-1">
+                            <div class="flex items-center gap-2">
+                                <label class="text-sm">問答答案:</label>
+                                <input type="number" id="blueAnswer" class="w-20 px-2 py-1 border rounded text-base" onchange="calculateScores()" min="0">
+                            </div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                屹立不倒分數: <span id="blueEnduranceScore" class="font-bold">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Auto Bonus -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            自動時段加分: <span id="blueAutoScore" class="font-bold">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="mt-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+            <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <label class="text-sm font-medium">自動時段勝方:</label>
+                    <select id="autoWinner" class="px-3 py-2 border rounded text-base" onchange="calculateScores()">
+                        <option value="none">平局</option>
+                        <option value="red">紅隊</option>
+                        <option value="blue">藍隊</option>
+                    </select>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="resetAll()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-base">
+                        重設全部
+                    </button>
+                    <button onclick="exportResults()" class="px-4 py-2 bg-primary text-white rounded hover:bg-purple-600 text-base">
+                        匯出結果
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-red-100 dark:bg-red-900/30 rounded-lg p-4 text-center">
+                <h3 class="text-lg font-bold text-red-600 dark:text-red-400">紅隊總分</h3>
+                <div id="redFinalScore" class="text-3xl font-bold text-red-700 dark:text-red-300">0</div>
+            </div>
+            <div class="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-4 text-center">
+                <h3 class="text-lg font-bold text-blue-600 dark:text-blue-400">藍隊總分</h3>
+                <div id="blueFinalScore" class="text-3xl font-bold text-blue-700 dark:text-blue-300">0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+
+
+        // Stack counters
+        let stackCounters = {
+            redMain: 0,
+            blueMain: 0,
+            redEndurance: 0,
+            blueEndurance: 0
+        };
+
+        // Add main scoring zone stack
+        function addMainStack(team) {
+            const zoneId = `${team}MainZone`;
+            const zone = document.getElementById(zoneId);
+            const stackId = `${team}Main${stackCounters[`${team}Main`]++}`;
+            
+            const stackDiv = document.createElement('div');
+            stackDiv.className = 'border border-gray-300 dark:border-gray-600 rounded-lg p-3';
+            stackDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium">堆疊 ${stackCounters[`${team}Main`]}</span>
+                    <button onclick="removeStack('${stackId}')" class="text-red-500 hover:text-red-700 text-sm">✕</button>
+                </div>
+                <div id="${stackId}" class="space-y-1">
+                    <div class="level flex items-center gap-2">
+                        <span class="text-xs w-12">第1層:</span>
+                        <select class="color-select w-16 px-1 py-1 border rounded text-sm">
+                            <option value="">無</option>
+                            <option value="red">紅</option>
+                            <option value="blue">藍</option>
+                        </select>
+                        <input type="number" class="number-input w-16 px-1 py-1 border rounded text-sm" placeholder="數字" min="0">
+                    </div>
+                </div>
+                <button onclick="addLevel('${stackId}')" class="mt-2 px-2 py-1 bg-gray-400 text-white rounded text-xs hover:bg-gray-500">
+                    + 加層
+                </button>
+            `;
+            zone.appendChild(stackDiv);
+            
+            // Add event listeners
+            addStackEventListeners(stackId);
+        }
+
+        // Add endurance zone stack
+        function addEnduranceStack(team) {
+            const zoneId = `${team}EnduranceZone`;
+            const zone = document.getElementById(zoneId);
+            const stackId = `${team}Endurance${stackCounters[`${team}Endurance`]++}`;
+            
+            const stackDiv = document.createElement('div');
+            stackDiv.className = 'border border-gray-300 dark:border-gray-600 rounded-lg p-3';
+            stackDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium">堆疊 ${stackCounters[`${team}Endurance`]}</span>
+                    <button onclick="removeStack('${stackId}')" class="text-red-500 hover:text-red-700 text-sm">✕</button>
+                </div>
+                <div id="${stackId}" class="space-y-1">
+                    <div class="level flex items-center gap-2">
+                        <span class="text-xs w-12">第1層:</span>
+                        <select class="color-select w-16 px-1 py-1 border rounded text-sm">
+                            <option value="">無</option>
+                            <option value="red">紅</option>
+                            <option value="blue">藍</option>
+                        </select>
+                        <input type="number" class="number-input w-16 px-1 py-1 border rounded text-sm" placeholder="數字" min="0">
+                    </div>
+                </div>
+                <button onclick="addLevel('${stackId}')" class="mt-2 px-2 py-1 bg-gray-400 text-white rounded text-xs hover:bg-gray-500">
+                    + 加層
+                </button>
+            `;
+            zone.appendChild(stackDiv);
+            
+            // Add event listeners
+            addStackEventListeners(stackId);
+        }
+
+        // Add level to stack
+        function addLevel(stackId) {
+            const stack = document.getElementById(stackId);
+            const levelCount = stack.querySelectorAll('.level').length + 1;
+            
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'level flex items-center gap-2';
+            levelDiv.innerHTML = `
+                <span class="text-xs w-12">第${levelCount}層:</span>
+                <select class="color-select w-16 px-1 py-1 border rounded text-sm">
+                    <option value="">無</option>
+                    <option value="red">紅</option>
+                    <option value="blue">藍</option>
+                </select>
+                <input type="number" class="number-input w-16 px-1 py-1 border rounded text-sm" placeholder="數字" min="0">
+                <button onclick="removeLevel(this)" class="text-red-500 hover:text-red-700 text-xs">✕</button>
+            `;
+            stack.appendChild(levelDiv);
+            
+            // Add event listeners to new level
+            addLevelEventListeners(levelDiv);
+        }
+
+        // Remove level
+        function removeLevel(button) {
+            button.parentElement.remove();
+            calculateScores();
+        }
+
+        // Remove stack
+        function removeStack(stackId) {
+            const stack = document.getElementById(stackId);
+            if (stack) {
+                stack.parentElement.remove();
+                calculateScores();
+            }
+        }
+
+        // Add event listeners to stack
+        function addStackEventListeners(stackId) {
+            const stack = document.getElementById(stackId);
+            const levels = stack.querySelectorAll('.level');
+            levels.forEach(level => addLevelEventListeners(level));
+        }
+
+        // Add event listeners to level
+        function addLevelEventListeners(level) {
+            const colorSelect = level.querySelector('.color-select');
+            const numberInput = level.querySelector('.number-input');
+            
+            colorSelect.addEventListener('change', calculateScores);
+            numberInput.addEventListener('input', calculateScores);
+        }
+
+        // Calculate main zone score
+        function calculateMainZone(team) {
+            const zone = document.getElementById(`${team}MainZone`);
+            const stacks = zone.querySelectorAll('[id^="' + team + 'Main"]');
+            let total = 0;
+
+            stacks.forEach(stack => {
+                const levels = stack.querySelectorAll('.level');
+                levels.forEach((level, index) => {
+                    if (index === 0) return; // Skip first level (no points)
+                    
+                    const color = level.querySelector('.color-select').value;
+                    const number = parseInt(level.querySelector('.number-input').value) || 0;
+                    
+                    if (color === team && number > 0) {
+                        const weight = index; // Second level = 1x, third level = 2x, etc.
+                        total += number * weight;
+                    }
+                });
+            });
+
+            return total;
+        }
+
+        // Calculate endurance zone score
+        function calculateEnduranceZone(team) {
+            const zone = document.getElementById(`${team}EnduranceZone`);
+            const stacks = zone.querySelectorAll('[id^="' + team + 'Endurance"]');
+            const answer = parseInt(document.getElementById(`${team}Answer`).value) || 0;
+            let validStacks = 0;
+
+            if (answer === 0) return 0;
+
+            stacks.forEach(stack => {
+                const levels = stack.querySelectorAll('.level');
+                let stackSum = 0;
+                
+                levels.forEach((level, index) => {
+                    if (index === 0) return; // Skip first level
+                    
+                    const color = level.querySelector('.color-select').value;
+                    const number = parseInt(level.querySelector('.number-input').value) || 0;
+                    
+                    if (color === team && number > 0) {
+                        stackSum += number;
+                    }
+                });
+                
+                if (stackSum === answer) {
+                    validStacks++;
+                }
+            });
+
+            return validStacks * 20;
+        }
+
+        // Calculate scores
+        function calculateScores() {
+            // Calculate main zone scores
+            const redMainScore = calculateMainZone('red');
+            const blueMainScore = calculateMainZone('blue');
+            
+            // Calculate endurance zone scores
+            const redEnduranceScore = calculateEnduranceZone('red');
+            const blueEnduranceScore = calculateEnduranceZone('blue');
+            
+            // Calculate auto bonus
+            const autoWinner = document.getElementById('autoWinner').value;
+            let redAutoScore = 0;
+            let blueAutoScore = 0;
+            
+            if (autoWinner === 'red') {
+                redAutoScore = 10;
+            } else if (autoWinner === 'blue') {
+                blueAutoScore = 10;
+            }
+            
+            // Calculate totals
+            const redTotal = redMainScore + redEnduranceScore + redAutoScore;
+            const blueTotal = blueMainScore + blueEnduranceScore + blueAutoScore;
+            
+            // Update display
+            document.getElementById('redMainScore').textContent = redMainScore;
+            document.getElementById('redEnduranceScore').textContent = redEnduranceScore;
+            document.getElementById('redAutoScore').textContent = redAutoScore;
+            document.getElementById('redTotal').textContent = redTotal;
+            document.getElementById('redFinalScore').textContent = redTotal;
+            
+            document.getElementById('blueMainScore').textContent = blueMainScore;
+            document.getElementById('blueEnduranceScore').textContent = blueEnduranceScore;
+            document.getElementById('blueAutoScore').textContent = blueAutoScore;
+            document.getElementById('blueTotal').textContent = blueTotal;
+            document.getElementById('blueFinalScore').textContent = blueTotal;
+        }
+
+        // Reset all data
+        function resetAll() {
+            if (confirm('確定要重設所有數據嗎？')) {
+                document.getElementById('redMainZone').innerHTML = '';
+                document.getElementById('blueMainZone').innerHTML = '';
+                document.getElementById('redEnduranceZone').innerHTML = '';
+                document.getElementById('blueEnduranceZone').innerHTML = '';
+                document.getElementById('redAnswer').value = '';
+                document.getElementById('blueAnswer').value = '';
+                document.getElementById('autoWinner').value = 'none';
+                
+                stackCounters = {
+                    redMain: 0,
+                    blueMain: 0,
+                    redEndurance: 0,
+                    blueEndurance: 0
+                };
+                
+                calculateScores();
+            }
+        }
+
+        // Export results
+        function exportResults() {
+            const results = {
+                timestamp: new Date().toISOString(),
+                red: {
+                    main_zone: parseInt(document.getElementById('redMainScore').textContent),
+                    endurance_zone: parseInt(document.getElementById('redEnduranceScore').textContent),
+                    auto_bonus: parseInt(document.getElementById('redAutoScore').textContent),
+                    total: parseInt(document.getElementById('redTotal').textContent)
+                },
+                blue: {
+                    main_zone: parseInt(document.getElementById('blueMainScore').textContent),
+                    endurance_zone: parseInt(document.getElementById('blueEnduranceScore').textContent),
+                    auto_bonus: parseInt(document.getElementById('blueAutoScore').textContent),
+                    total: parseInt(document.getElementById('blueTotal').textContent)
+                }
+            };
+            
+            const dataStr = JSON.stringify(results, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `屹立不倒_比賽結果_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize with one stack for each zone
+        window.addEventListener('load', () => {
+            addMainStack('red');
+            addMainStack('blue');
+            addEnduranceStack('red');
+            addEnduranceStack('blue');
+        });
+    </script>
+</body>
+</html>
