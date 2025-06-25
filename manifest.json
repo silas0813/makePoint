@@ -3,12 +3,12 @@
     "name": "屹立不倒 - 計分程式",
     "icons": [
       {
-        "src": "/128_128.jpg",
+        "src": "/128x128.png",
         "sizes": "128x128",
         "type": "image/png"
       },
       {
-        "src": "/512_512.jpg",
+        "src": "/512x512.png",
         "sizes": "512x512",
         "type": "image/png"
       }
